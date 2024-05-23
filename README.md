@@ -1,22 +1,32 @@
 
-```markdown
 # AdminRecon
 
-AdminRecon is a simple Python script that attempts to discover admin panels on a target website by brute-forcing common admin panel paths.
+<p align="center">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTk9Kx0uPmIqifrh6xyTZL0mi86BdPF8cjWDF4qU_3lzA&s" alt="AdminRecon Logo" width="200"/>
+</p>
 
-## Features
+<p align="center">
+  <b>AdminRecon</b> is a powerful Python script designed to discover admin panels on target websites by brute-forcing common admin panel paths.
+</p>
 
-- Checks for admin panels using a predefined list of common paths.
-- Provides colored output for different HTTP response statuses.
-- Allows customization of request delay and output file via command-line arguments.
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.x-blue.svg" alt="Python 3.x">
+  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License: MIT">
+</p>
 
-## Requirements
+## 🚀 Features
+
+- 🔍 Checks for admin panels using a predefined list of common paths.
+- 🎨 Colored output for different HTTP response statuses.
+- ⚙️ Customizable request delay and output file via command-line arguments.
+
+## 📋 Requirements
 
 - Python 3.x
 - `requests` library
 - `colorama` library
 
-## Installation
+## 📦 Installation
 
 1. Clone the repository:
     ```sh
@@ -29,7 +39,7 @@ AdminRecon is a simple Python script that attempts to discover admin panels on a
     pip install -r requirements.txt
     ```
 
-## Usage
+## 🛠️ Usage
 
 ```sh
 python adminrecon.py -u <URL> [-d <delay>] [-o <output file>]
@@ -45,34 +55,42 @@ python adminrecon.py -u <URL> [-d <delay>] [-o <output file>]
 python adminrecon.py -u http://example.com -d 1 -o output.txt
 ```
 
-## Output
+## 🖥️ Output
 
-The script will print the results in the terminal with different colors for different HTTP statuses:
-- **200**: Blue - Admin panel found.
-- **403**: Red - Access forbidden.
-- **404**: Default - Not found.
-- **302**: Yellow - Redirecting.
+The script prints the results in the terminal with different colors for different HTTP statuses:
+- **200**: 💙 Blue - Admin panel found.
+- **403**: ❤️ Red - Access forbidden.
+- **404**: 🚫 Default - Not found.
+- **302**: 💛 Yellow - Redirecting.
 - Other statuses will be printed in blue with their status code.
 
-The results will also be saved to the specified output file.
+Results are also saved to the specified output file.
 
-## Disclaimer
+## ⚠️ Disclaimer
 
 This script is for educational purposes only. Use it responsibly and do not use it to target websites without permission. The author is not responsible for any misuse of this tool.
 
-## License
+## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Author
+## 👤 Author
 
-- Created by Kiran Kumar K
+- Created by [Kiran Kumar K](https://github.com/KIRAN-KUMAR-K3)
 
-## Acknowledgements
+## 🙏 Acknowledgements
 
 - Thanks to the contributors of the `requests` and `colorama` libraries.
 
 ---
 
 Feel free to contribute to this project by submitting issues or pull requests.
-```
+
+<p align="center">
+  <a href="https://github.com/KIRAN-KUMAR-K3/AdminRecon">
+    <img src="https://img.shields.io/github/stars/KIRAN-KUMAR-K3/AdminRecon?style=social" alt="GitHub Stars">
+  </a>
+  <a href="https://github.com/KIRAN-KUMAR-K3/AdminRecon/fork">
+    <img src="https://img.shields.io/github/forks/KIRAN-KUMAR-K3/AdminRecon?style=social" alt="GitHub Forks">
+  </a>
+</p>
