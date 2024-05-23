@@ -72,7 +72,7 @@ This script is for educational purposes only. Use it responsibly and do not use 
 
 ## 📜 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [MIT LICENSE]([LICENSE](https://github.com/KIRAN-KUMAR-K3/AdminRecon?tab=MIT-1-ov-file#) file for details.
 
 ## 👤 Author
 
