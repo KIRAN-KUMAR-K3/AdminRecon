@@ -1,29 +1,39 @@
 #!/usr/bin/python
 import requests
-from colorama import Fore,Back,Style,init
+from colorama import Fore, Back, Style, init
 import random
 import argparse
-parse = argparse.ArgumentParser()
-parse.add_argument('-u','--url',type=str,help='URL To Be Attacked!')
-args = parse.parse_args()
-init(autoreset=True)
-colorsare = (Fore.YELLOW,Fore.GREEN,Fore.RED,Fore.BLUE,Fore.WHITE,Fore.MAGENTA,Fore.CYAN)
-print (colorsare[random.randint(0,6)] + Style.DIM + '''
+import time
 
+# Argument Parsing
+parse = argparse.ArgumentParser()
+parse.add_argument('-u', '--url', type=str, help='URL To Be Attacked!', required=True)
+parse.add_argument('-d', '--delay', type=float, default=0.5, help='Delay between requests in seconds')
+parse.add_argument('-o', '--output', type=str, help='Output file to save results', default='results.txt')
+args = parse.parse_args()
+
+# Initializing Colorama
+init(autoreset=True)
+colorsare = (Fore.YELLOW, Fore.GREEN, Fore.RED, Fore.BLUE, Fore.WHITE, Fore.MAGENTA, Fore.CYAN)
+
+# Printing Banner
+print(colorsare[random.randint(0, 6)] + Style.DIM + '''
 ░█████╗░██████╗░███╗░░░███╗██╗███╗░░██╗██████╗░███████╗░█████╗░░█████╗░███╗░░██╗
 ██╔══██╗██╔══██╗████╗░████║██║████╗░██║██╔══██╗██╔════╝██╔══██╗██╔══██╗████╗░██║
 ███████║██║░░██║██╔████╔██║██║██╔██╗██║██████╔╝█████╗░░██║░░╚═╝██║░░██║██╔██╗██║
 ██╔══██║██║░░██║██║╚██╔╝██║██║██║╚████║██╔══██╗██╔══╝░░██║░░██╗██║░░██║██║╚████║
 ██║░░██║██████╔╝██║░╚═╝░██║██║██║░╚███║██║░░██║███████╗╚█████╔╝╚█████╔╝██║░╚███║
-╚═╝░░╚═╝╚═════╝░╚═╝░░░░░╚═╝╚═╝╚═╝░░╚══╝╚═╝░░╚═╝╚══════╝░╚════╝░░╚════╝░╚═╝░░╚══╝  
-n                                                          (kiran-kumar-k3  ''')
-print(colorsare[random.randint(0,6)] + '''
+╚═╝░░╚═╝╚═════╝░╚═╝░░░░░╚═╝╚═╝╚═╝░░╚══╝╚═╝░░╚═╝╚══════╝░╚════╝░░╚════╝░╚═╝░░╚══╝
+''')
+print(colorsare[random.randint(0, 6)] + '''
 +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+''')
-print(colorsare[random.randint(0,3)] + '''			
-			-: Team Cyber-genetics:- 
-		<https://github.com/KIRAN-KUMAR-K3/>
-		  -: Created By : KIRAN-KUMAR-K  :- 
-	''')
+print(colorsare[random.randint(0, 3)] + '''
+            -: Team Cyber-genetics:-
+        <https://github.com/KIRAN-KUMAR-K3/>
+          -: Created By : KIRAN-KUMAR-K  :-
+''')
+
+# Payload List (Admin Panel Paths)
 payload = [
 "/admin/",
 "/administrator/",
@@ -59,7 +69,7 @@ payload = [
 "/admin/login.html",
 "/admin/admin.html",
 "/admin_area/index.php",
-"/bb-admin/index.php",
+"/bb-admin/idex.php",
 "/bb-admin/login.php",
 "/bb-admin/admin.php",
 "/admin/home.php",
@@ -439,20 +449,36 @@ payload = [
 "/administratorlogin.cgi",
 "/admin_panel/",
 "/admin_panel.html",
-"/adm_cp/"]
+"/adm_cp/"   
+]
+
+# Function to Search for Admin Panels
 def searchpanel():
-			url = args.url
-			for admin in payload:
-				getrequest = requests.get(url + admin)
-				statuscode = str(getrequest.status_code)
-				if statuscode == "200":
-					print(url + admin + Fore.BLUE + "--> Boom!")
-				elif statuscode == "403":
-					print(url + admin + "--> Mother F**Ker Forbidden")
-				elif statuscode == "404":
-					print(url + admin + Style.RESET_ALL + "--> Not Found :(")
-				elif statuscode == "302":
-					print(url + admin + "--> F*ck Redirecting -_-")
-				else: 
-					print(Fore.BLUE + url + admin + Style.RESET_ALL + "--> " + statuscode)
+    url = args.url
+    output_file = open(args.output, 'w')
+    for admin in payload:
+        try:
+            getrequest = requests.get(url + admin)
+            statuscode = str(getrequest.status_code)
+            if statuscode == "200":
+                result = f"{url}{admin} --> Boom!\n"
+                print(url + admin + Fore.BLUE + "--> Boom!")
+            elif statuscode == "403":
+                result = f"{url}{admin} --> Forbidden\n"
+                print(url + admin + "--> Mother F**Ker Forbidden")
+            elif statuscode == "404":
+                result = f"{url}{admin} --> Not Found\n"
+                print(url + admin + Style.RESET_ALL + "--> Not Found :(")
+            elif statuscode == "302":
+                result = f"{url}{admin} --> Redirecting\n"
+                print(url + admin + "--> F*ck Redirecting -_-")
+            else:
+                result = f"{url}{admin} --> {statuscode}\n"
+                print(Fore.BLUE + url + admin + Style.RESET_ALL + "--> " + statuscode)
+            output_file.write(result)
+        except requests.RequestException as e:
+            print(f"Error with {url}{admin}: {e}")
+        time.sleep(args.delay)
+    output_file.close()
+
 searchpanel()
