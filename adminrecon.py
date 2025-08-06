@@ -443,7 +443,8 @@ payloads = [
 # Banner Function
 def print_banner():
     color = random.choice(COLORS)
-    print(colorsare[random.randint(0, 6)] + Style.DIM + '''
+    print(color + Style.BRIGHT + r'''
+  
 ░█████╗░██████╗░███╗░░░███╗██╗███╗░░██╗██████╗░███████╗░█████╗░░█████╗░███╗░░██╗
 ██╔══██╗██╔══██╗████╗░████║██║████╗░██║██╔══██╗██╔════╝██╔══██╗██╔══██╗████╗░██║
 ███████║██║░░██║██╔████╔██║██║██╔██╗██║██████╔╝█████╗░░██║░░╚═╝██║░░██║██╔██╗██║
@@ -453,6 +454,52 @@ def print_banner():
 ''')
     print(color + "Created by: Kiran-Kumar-K | Team Cyber-genetics")
     print(color + f"Scan started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
+
+# Admin Panel Finder Function
+def find_admin_panels():
+    found = []
+    try:
+        with open(args.output, 'w') as output_file:
+            for path in payloads:
+                full_url = urljoin(args.url, path)
+                try:
+                    response = requests.get(full_url, timeout=10)
+                    status = response.status_code
+
+                    if status == 200:
+                        message = f"[200 OK] Found: {full_url}"
+                        print(Fore.GREEN + message)
+                        output_file.write(message + '\n')
+                        found.append(full_url)
+                    elif status == 403:
+                        print(Fore.YELLOW + f"[403 FORBIDDEN] {full_url}")
+                    elif status == 302:
+                        print(Fore.CYAN + f"[302 REDIRECT] {full_url}")
+                    elif status == 404:
+                        print(Fore.RED + f"[404 NOT FOUND] {full_url}")
+                    else:
+                        print(Fore.MAGENTA + f"[{status}] {full_url}")
+
+                except requests.RequestException as e:
+                    print(Fore.RED + f"[ERROR] Failed to connect to {full_url}: {e}")
+                time.sleep(args.delay)
+    except KeyboardInterrupt:
+        print(Fore.RED + "\n[!] Scan interrupted by user.")
+
+    print("\nScan completed.")
+    if found:
+        print(Fore.GREEN + f"\n[+] Found {len(found)} possible admin panel(s). Results saved in {args.output}")
+    else:
+        print(Fore.YELLOW + "\n[!] No admin panels found.")
+
+# Run
+if __name__ == '__main__':
+    print_banner()
+    find_admin_panels()
+
+
+
+# Banner Function
 
 # Admin Panel Finder Function
 def find_admin_panels():
