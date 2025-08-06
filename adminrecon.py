@@ -1,40 +1,29 @@
-#!/usr/bin/python
 import requests
-from colorama import Fore, Back, Style, init
+from colorama import Fore, Style, init
 import random
 import argparse
 import time
+from datetime import datetime
+from urllib.parse import urljoin
+
+# Initialize Colorama
+init(autoreset=True)
+
+# Define Colors
+COLORS = [
+    Fore.YELLOW, Fore.GREEN, Fore.RED, Fore.BLUE,
+    Fore.WHITE, Fore.MAGENTA, Fore.CYAN
+]
 
 # Argument Parsing
-parse = argparse.ArgumentParser()
-parse.add_argument('-u', '--url', type=str, help='URL To Be Attacked!', required=True)
-parse.add_argument('-d', '--delay', type=float, default=0.5, help='Delay between requests in seconds')
-parse.add_argument('-o', '--output', type=str, help='Output file to save results', default='results.txt')
-args = parse.parse_args()
+parser = argparse.ArgumentParser(description="Admin Panel Finder Tool")
+parser.add_argument('-u', '--url', type=str, required=True, help='Base URL to scan')
+parser.add_argument('-d', '--delay', type=float, default=0.5, help='Delay between requests (in seconds)')
+parser.add_argument('-o', '--output', type=str, default='results.txt', help='File to save results')
+args = parser.parse_args()
 
-# Initializing Colorama
-init(autoreset=True)
-colorsare = (Fore.YELLOW, Fore.GREEN, Fore.RED, Fore.BLUE, Fore.WHITE, Fore.MAGENTA, Fore.CYAN)
-
-# Printing Banner
-print(colorsare[random.randint(0, 6)] + Style.DIM + '''
-░█████╗░██████╗░███╗░░░███╗██╗███╗░░██╗██████╗░███████╗░█████╗░░█████╗░███╗░░██╗
-██╔══██╗██╔══██╗████╗░████║██║████╗░██║██╔══██╗██╔════╝██╔══██╗██╔══██╗████╗░██║
-███████║██║░░██║██╔████╔██║██║██╔██╗██║██████╔╝█████╗░░██║░░╚═╝██║░░██║██╔██╗██║
-██╔══██║██║░░██║██║╚██╔╝██║██║██║╚████║██╔══██╗██╔══╝░░██║░░██╗██║░░██║██║╚████║
-██║░░██║██████╔╝██║░╚═╝░██║██║██║░╚███║██║░░██║███████╗╚█████╔╝╚█████╔╝██║░╚███║
-╚═╝░░╚═╝╚═════╝░╚═╝░░░░░╚═╝╚═╝╚═╝░░╚══╝╚═╝░░╚═╝╚══════╝░╚════╝░░╚════╝░╚═╝░░╚══╝
-''')
-print(colorsare[random.randint(0, 6)] + '''
-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+''')
-print(colorsare[random.randint(0, 3)] + '''
-            -: Team Cyber-genetics:-
-        <https://github.com/KIRAN-KUMAR-K3/>
-          -: Created By : KIRAN-KUMAR-K  :-
-''')
-
-# Payload List (Admin Panel Paths)
-payload = [
+# Admin Panel Payloads (shortened for readability)
+payloads = [
 "/admin/",
 "/administrator/",
 "/admin1/",
@@ -451,34 +440,105 @@ payload = [
 "/admin_panel.html",
 "/adm_cp/"   
 ]
+# Banner Function
+def print_banner():
+    color = random.choice(COLORS)
+    print(color + Style.BRIGHT + r'''
+  
+░█████╗░██████╗░███╗░░░███╗██╗███╗░░██╗██████╗░███████╗░█████╗░░█████╗░███╗░░██╗
+██╔══██╗██╔══██╗████╗░████║██║████╗░██║██╔══██╗██╔════╝██╔══██╗██╔══██╗████╗░██║
+███████║██║░░██║██╔████╔██║██║██╔██╗██║██████╔╝█████╗░░██║░░╚═╝██║░░██║██╔██╗██║
+██╔══██║██║░░██║██║╚██╔╝██║██║██║╚████║██╔══██╗██╔══╝░░██║░░██╗██║░░██║██║╚████║
+██║░░██║██████╔╝██║░╚═╝░██║██║██║░╚███║██║░░██║███████╗╚█████╔╝╚█████╔╝██║░╚███║
+╚═╝░░╚═╝╚═════╝░╚═╝░░░░░╚═╝╚═╝╚═╝░░╚══╝╚═╝░░╚═╝╚══════╝░╚════╝░░╚════╝░╚═╝░░╚══╝
+''')
+    print(color + "Created by: Kiran-Kumar-K | Team Cyber-genetics")
+    print(color + f"Scan started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}\n")
 
-# Function to Search for Admin Panels
-def searchpanel():
-    url = args.url
-    output_file = open(args.output, 'w')
-    for admin in payload:
-        try:
-            getrequest = requests.get(url + admin)
-            statuscode = str(getrequest.status_code)
-            if statuscode == "200":
-                result = f"{url}{admin} --> Boom!\n"
-                print(url + admin + Fore.BLUE + "--> Boom!")
-            elif statuscode == "403":
-                result = f"{url}{admin} --> Forbidden\n"
-                print(url + admin + "--> Mother F**Ker Forbidden")
-            elif statuscode == "404":
-                result = f"{url}{admin} --> Not Found\n"
-                print(url + admin + Style.RESET_ALL + "--> Not Found :(")
-            elif statuscode == "302":
-                result = f"{url}{admin} --> Redirecting\n"
-                print(url + admin + "--> F*ck Redirecting -_-")
-            else:
-                result = f"{url}{admin} --> {statuscode}\n"
-                print(Fore.BLUE + url + admin + Style.RESET_ALL + "--> " + statuscode)
-            output_file.write(result)
-        except requests.RequestException as e:
-            print(f"Error with {url}{admin}: {e}")
-        time.sleep(args.delay)
-    output_file.close()
+# Admin Panel Finder Function
+def find_admin_panels():
+    found = []
+    try:
+        with open(args.output, 'w') as output_file:
+            for path in payloads:
+                full_url = urljoin(args.url, path)
+                try:
+                    response = requests.get(full_url, timeout=10)
+                    status = response.status_code
 
-searchpanel()
+                    if status == 200:
+                        message = f"[200 OK] Found: {full_url}"
+                        print(Fore.GREEN + message)
+                        output_file.write(message + '\n')
+                        found.append(full_url)
+                    elif status == 403:
+                        print(Fore.YELLOW + f"[403 FORBIDDEN] {full_url}")
+                    elif status == 302:
+                        print(Fore.CYAN + f"[302 REDIRECT] {full_url}")
+                    elif status == 404:
+                        print(Fore.RED + f"[404 NOT FOUND] {full_url}")
+                    else:
+                        print(Fore.MAGENTA + f"[{status}] {full_url}")
+
+                except requests.RequestException as e:
+                    print(Fore.RED + f"[ERROR] Failed to connect to {full_url}: {e}")
+                time.sleep(args.delay)
+    except KeyboardInterrupt:
+        print(Fore.RED + "\n[!] Scan interrupted by user.")
+
+    print("\nScan completed.")
+    if found:
+        print(Fore.GREEN + f"\n[+] Found {len(found)} possible admin panel(s). Results saved in {args.output}")
+    else:
+        print(Fore.YELLOW + "\n[!] No admin panels found.")
+
+# Run
+if __name__ == '__main__':
+    print_banner()
+    find_admin_panels()
+
+
+
+# Banner Function
+
+# Admin Panel Finder Function
+def find_admin_panels():
+    found = []
+    try:
+        with open(args.output, 'w') as output_file:
+            for path in payloads:
+                full_url = urljoin(args.url, path)
+                try:
+                    response = requests.get(full_url, timeout=10)
+                    status = response.status_code
+
+                    if status == 200:
+                        message = f"[200 OK] Found: {full_url}"
+                        print(Fore.GREEN + message)
+                        output_file.write(message + '\n')
+                        found.append(full_url)
+                    elif status == 403:
+                        print(Fore.YELLOW + f"[403 FORBIDDEN] {full_url}")
+                    elif status == 302:
+                        print(Fore.CYAN + f"[302 REDIRECT] {full_url}")
+                    elif status == 404:
+                        print(Fore.RED + f"[404 NOT FOUND] {full_url}")
+                    else:
+                        print(Fore.MAGENTA + f"[{status}] {full_url}")
+
+                except requests.RequestException as e:
+                    print(Fore.RED + f"[ERROR] Failed to connect to {full_url}: {e}")
+                time.sleep(args.delay)
+    except KeyboardInterrupt:
+        print(Fore.RED + "\n[!] Scan interrupted by user.")
+
+    print("\nScan completed.")
+    if found:
+        print(Fore.GREEN + f"\n[+] Found {len(found)} possible admin panel(s). Results saved in {args.output}")
+    else:
+        print(Fore.YELLOW + "\n[!] No admin panels found.")
+
+# Run
+if __name__ == '__main__':
+    print_banner()
+    find_admin_panels()
